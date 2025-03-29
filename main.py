@@ -1,47 +1,35 @@
+
+
+from stats import get_book_text, get_num_words, get_letter_count, get_sort
+
+import sys
+
+if len(sys.argv) !=2:
+    print("Usage: python3 main.py <path_to_book>")
+    sys.exit(1)
+
 def main():
-    book_path = "books/frankenstien.txt"
-    text = get_book_text(book_path)
-    num_words = get_num_words(text)
-    chars_dict = get_chars_dict(text)
-    chars_sorted_list = chars_dict_to_sorted_list(chars_dict)
 
-    print(f"---begin report of {book_path}---")
-    print(f"{num_words} word found in the document")
-    print()
+    print("Please Provide a file path to review")
+    path = sys.argv[1]
+    text = get_book_text(path)
+    word_count = get_num_words(text)
+    char_counts = get_letter_count(text)
+    sorted_chars = get_sort(char_counts)
     
-    for item in chars_sorted_list:
-        if not item["char"].isalpha():
-            continue
-        print(f"the '{item['char']}' character was found{item['num']} time")
-
-    print("---end report---")
-
-def get_num_words(text):
-    words = text.split()
-    return len(words)
-
-def sort_on(d):
-    return d["num"]
-
-def chars_dict_to_sorted_list(num_chars_dict):
-    sorted_list = []
-    for ch in num_chars_dict:
-        sorted_list.append({"char": ch, "num": num_chars_dict[ch]})
-    sorted_list.sort(reverse=True, key=sort_on)
-    return sorted_list
-
-def get_chars_dict(text):
-    chars ={}
-    for c in text:
-        lowered = c.lower()
-        if lowered in chars:
-            chars[lowered] +=1
-        else:
-            chars[lowered]=1
-    return chars
-
-def get_book_text(path):
-    with open(path) as f:
-        return f.read()
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {path}...")
+    print("----------- Word Count ----------")
+    print(f"Found {word_count} total words")
+    print("--------- Character Count -------")
     
-main() 
+    # Print each character and its count
+    for char_dict in sorted_chars:
+        char = char_dict["char"]
+        count = char_dict["count"]
+        if char.isalpha():  # Only print alphabetical characters
+            print(f"{char}: {count}")
+    
+    print("============= END ===============")
+
+main()
